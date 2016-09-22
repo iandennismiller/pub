@@ -1,0 +1,42 @@
+---
+layout:     page
+title:      Pub
+permalink:  /pub/
+menu:       main
+image:      /media/thumb-big.jpg
+excerpt:    Pub.
+---
+
+<p>
+  <b>Pub</b> is an online publishing system written by Ian Dennis Miller.  I use <b>Pub</b> to release my own reports and working <a href="#papers">papers</a>.  I also publish new editions of public domain works to improve the available <a href="#archive">archive</a>.
+</p>
+
+<a name="papers"></a>
+<h2>Papers</h2>
+
+<ul>
+  {% for pub in site.data.pub %}
+    {% if pub.category == 'personal' %}
+    <li>
+      <a href="/pub/{{ pub.identifier }}.pdf">[PDF]</a>
+      <a href="/pub/{{ pub.identifier }}.bib">[Bib]</a>
+      {{ pub.author }} ({{ pub.year }}). {{ pub.title }}
+    </li>
+    {% endif %}
+  {% endfor %}
+</ul>
+
+<a name="archive"></a>
+<h2>Archive</h2>
+
+<ul>
+  {% for pub in site.data.pub %}
+    {% if pub.category == 'archive' %}
+    <li>
+      <a href="/pub/{{ pub.identifier }}.pdf">[PDF]</a>
+      <a href="/pub/{{ pub.identifier }}.bib">[Bib]</a>
+      {{ pub.author }}. ({{ pub.year }}). {{ pub.title }}
+    </li>
+    {% endif %}
+  {% endfor %}
+</ul>
