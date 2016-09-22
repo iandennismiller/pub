@@ -27,13 +27,12 @@ class Pub():
         self.directory_list = directory_list
         self.json_destination = json_destination
 
-    def init_folder(self):
+    def init_folders(self):
         """
         Expand skel into current folder.
         """
         venv_path = os.environ.get("VIRTUAL_ENV")
         if venv_path:
-            copy_tree("skel", )
             os.system("mrbob -w {0} -O .".format(os.path.join(venv_path, "share/skel")))
         else:
             print("Pub must be installed within a Python virtualenv for this feature to work.")
