@@ -30,7 +30,7 @@ docs:
 	SETTINGS=$$PWD/etc/conf/testing.conf sphinx-build -b html docs build/sphinx
 
 release:
-	# first: python setup.py register
-	python setup.py sdist upload
+	# first: python setup.py register -r https://pypi.python.org/pypi
+	python setup.py sdist upload -r https://pypi.python.org/pypi
 
 .PHONY: clean install test watch docs release requirements requirements-dev

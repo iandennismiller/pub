@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
 # Pub2 (cc) 2016 Ian Dennis Miller
-
 
 import glob
 import json
 import yaml
 import os
+import sys
 import re
 import shutil
 import click
 import codecs
+import pkg_resources
 from git import Repo
 from jinja2 import Template
 from distutils.dir_util import copy_tree
 
 
 class Pub2():
-    def __init__(self, directory_list=["_pub"], json_destination="_data/pub.json"):
+    def __init__(self, directory_list=["_pubs"], json_destination="_data/pub.json"):
         self.ensure_paths()
         self.directory_list = directory_list
         self.json_destination = json_destination
@@ -27,12 +27,11 @@ class Pub2():
         """
         Expand skel into current folder.
         """
-        venv_path = os.environ.get("VIRTUAL_ENV")
-        if venv_path:
-            os.system("mrbob -w {0} -O .".format(os.path.join(venv_path, "share/skel")))
-            os.remove(".mrbob.ini")
-        else:
-            print("Pub must be installed within a Python virtualenv for this feature to work.")
+        filename = pkg_resources.resource_filename('pub2', 'skel')
+        pathname = os.path.dirname(os.path.abspath(__file__))
+        print(os.path.join(pathname, filename))
+        os.system("mrbob -w {0} -O .".format(os.path.join(pathname, filename)))
+        os.remove(".mrbob.ini")
 
     def find_files(self):
         """
@@ -51,7 +50,7 @@ class Pub2():
         """
         changed_files = list()
 
-        # for each file in _pub
+        # for each file in _pubs
         for filename in self.find_files():
             # check whether the corresponding files in pub are older
             pub_file = File(filename)
@@ -69,20 +68,25 @@ class Pub2():
         for filename in self.find_files():
             pub_file = File(filename)
             preamble = pub_file.get_preamble()
-            summary.append({
-                'title': preamble['title'],
-                'author': preamble['author'],
-                'identifier': preamble['identifier'],
-                'year': preamble['year'],
-                'category': preamble['category'],
-                })
+            try:
+                h = {
+                    'title': preamble['title'],
+                    'author': preamble['author'],
+                    'identifier': preamble['identifier'],
+                    'year': preamble['year'],
+                    'category': preamble['category'],
+                }
+            except KeyError:
+                print("ERROR: Missing required fields from preamble: {0}".format(filename))
+                sys.exit(1)
+            summary.append(h)
 
         with codecs.open(self.json_destination, "w", "utf-8") as f:
             json.dump(summary, f)
 
     def build(self, rebuild):
         """
-        transform files from _pub into their publication versions in pub.
+        transform files from _pubs into their publication versions in pub.
         """
 
         if rebuild:
@@ -91,12 +95,12 @@ class Pub2():
             changed_files = self.detect_changed_files()
 
         if changed_files:
+            self.create_json_digest()
             for filename in changed_files:
                 print("process: {0}".format(filename))
                 pub_file = File(filename)
                 pub_file.create_bibtex()
                 pub_file.create_pdf()
-            self.create_json_digest()
         print("Done")
 
     def ensure_paths(self):
@@ -106,8 +110,8 @@ class Pub2():
         if not os.path.exists("pub"):
             os.makedirs("pub")
 
-        if not os.path.exists("_pub"):
-            os.makedirs("_pub")
+        if not os.path.exists("_pubs"):
+            os.makedirs("_pubs")
 
 
 class File():
@@ -131,7 +135,7 @@ class File():
         try:
             repo = Repo(".")
         except:
-            print("not operating in git")
+            print("INFO: Not operating in git")
             return()
 
         hc = repo.head.commit
@@ -180,7 +184,7 @@ class File():
         # env = Environment(loader=PackageLoader('pub', '_layouts'))
 
         if 'layout' in self.preamble and self.preamble['layout'] != None:
-            with codecs.open("_pub/_layouts/{0}.tex".format(self.preamble['layout']), "r", "utf-8") as f:
+            with codecs.open("_pubs/_layouts/{0}.tex".format(self.preamble['layout']), "r", "utf-8") as f:
                 re_content = r"^---$.*?^---$(.*)"
                 m = re.search(re_content, f.read(), re.MULTILINE | re.DOTALL)
                 if m:
@@ -208,6 +212,10 @@ class File():
         """
         # determine filename
         filename = "./pub/{0}.bib".format(self.identifier)
+
+        with codecs.open("_pubs/_templates/citation.bib", "r", "utf-8") as f:
+            bibtex_template = f.read()
+
         bibtex_str = bibtex_template.format(**self.preamble)
         with codecs.open(filename, "w", "utf-8") as f:
             f.write(bibtex_str)
@@ -227,7 +235,7 @@ class File():
         basename = os.path.basename(self.filename)[:-4]
 
         # copy assets
-        assets_path = "_pub/_assets/{0}/".format(basename)
+        assets_path = "_pubs/_assets/{0}/".format(basename)
         if os.path.exists(assets_path):
             copy_tree(assets_path, ".build/")
         else:
@@ -256,10 +264,13 @@ class File():
 
     def is_stale(self):
         """
-        return True if the files in pub are older than the one in _pub.
+        return True if the files in pub are older than the one in _pubs.
         """
         bib_filename = "pub/{0}.bib".format(self.identifier)
         pdf_filename = "pub/{0}.pdf".format(self.identifier)
+
+        if not os.path.isfile("_data/pub.json"):
+            return True
 
         # if the .bib or .pdf does not exist, return True
         if not os.path.isfile(bib_filename):
@@ -311,38 +322,15 @@ def new_from_template():
     author = raw_input("Author(s): ")
     year = raw_input("Year: ")
     filename = "-".join(title.split(" ")).lower() + ".tex"
-    with codecs.open("_pub/{0}".format(filename), "w", "utf-8") as f:
+    with codecs.open("_pubs/_templates/blank.tex", "r", "utf-8") as f:
+        blank_template = f.read()
+    with codecs.open("_pubs/{0}".format(filename), "w", "utf-8") as f:
         f.write(blank_template.format(title=title, author=author, year=year))
-    print("created file: _pub/{0}".format(filename))
+    print("created file: _pubs/{0}".format(filename))
 
 
 cli.add_command(build)
 cli.add_command(rebuild)
-
-bibtex_template = """\
-@misc{{{identifier},
-  title =        "{title}",
-  author =       "{author}",
-  year =         "{year}",
-  publisher =    "Ian Dennis Miller",
-  howpublished = "\\url{{http://imiller.utsc.utoronto.ca/pub/{identifier}.pdf}}",
-}}
-"""
-
-blank_template = """\
----
-layout: default
-title: {title}
-author: {author}
-year: {year}
-identifier: name_title_{year}
-category: archive|personal
-bibtex: false
-biber: false
-provenance: Appears in ...
----
-
-"""
 
 if __name__ == '__main__':
     cli()

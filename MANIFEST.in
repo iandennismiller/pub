@@ -1,3 +1,2 @@
-include Readme.rst
-include requirements.txt
-recursive-include skel *
+graft pub2
+include *.cfg *.rst *.in *.txt
