@@ -30,6 +30,7 @@ class Pub2():
         venv_path = os.environ.get("VIRTUAL_ENV")
         if venv_path:
             os.system("mrbob -w {0} -O .".format(os.path.join(venv_path, "share/skel")))
+            os.remove(".mrbob.ini")
         else:
             print("Pub must be installed within a Python virtualenv for this feature to work.")
 
