@@ -15,7 +15,14 @@ The following will install pub2.
 
 ::
 
+    mkvirtualenv -a . my-website
     pip install pub2
+
+Pub2 can be installed system-wide with Homebrew.
+
+::
+
+    brew install https://raw.githubusercontent.com/iandennismiller/pub2/master/etc/pub2.rb
 
 Usage
 ^^^^^
