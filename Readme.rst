@@ -1,24 +1,33 @@
-pub
-===
+pub2
+====
 
-Pub is a self-publishing framework.
+Pub2 is a self-publishing framework.
 
 Overview
 --------
 
-Pub is a self-publishing framework.  It integrates with Jekyll to provide LaTeX publishing.
+Pub2 is a self-publishing framework.  It integrates with Jekyll to provide LaTeX publishing.
 
 Installation
 ^^^^^^^^^^^^
 
-The following will install pub.
+The following will install pub2.
 
 ::
 
-    mkvirtualenv -a . pub
-    make install
+    pip install pub2
+
+Usage
+^^^^^
+
+Create a new folder and switch to it.  The following will initialize the folder and render a sample document.
+
+::
+
+    pub2 init
+    pub2 build
 
 Documentation
 ^^^^^^^^^^^^^
 
-http://pub.readthedocs.io
+http://pub2.readthedocs.io

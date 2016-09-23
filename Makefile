@@ -1,4 +1,4 @@
-# pub (c) Ian Dennis Miller
+# pub2 (c) Ian Dennis Miller
 
 SHELL=/bin/bash
 PROJECT_NAME=pub

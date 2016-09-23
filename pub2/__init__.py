@@ -1,12 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Pub (cc) 2016 Ian Dennis Miller
+# Pub2 (cc) 2016 Ian Dennis Miller
 
-"""
-## requirements
-pip install pyyaml click
-"""
 
 import glob
 import json
@@ -21,7 +17,7 @@ from jinja2 import Template
 from distutils.dir_util import copy_tree
 
 
-class Pub():
+class Pub2():
     def __init__(self, directory_list=["_pub"], json_destination="_data/pub.json"):
         self.ensure_paths()
         self.directory_list = directory_list
@@ -292,19 +288,19 @@ def cli():
 
 @cli.command('init', short_help='create fresh Pub folders')
 def init():
-    pub = Pub()
+    pub = Pub2()
     pub.init_folders()
 
 
 @cli.command('build', short_help='build files')
 def build():
-    pub = Pub()
+    pub = Pub2()
     pub.build(rebuild=False)
 
 
 @cli.command('rebuild', short_help='force rebuild of all files')
 def rebuild():
-    pub = Pub()
+    pub = Pub2()
     pub.build(rebuild=True)
 
 
@@ -349,14 +345,3 @@ provenance: Appears in ...
 
 if __name__ == '__main__':
     cli()
-
-"""
-TODO
-
-- Read settings from _config.yml
-- support "layout" in preamble
-- create latex layout and apply it
-- check for duplicate identifiers
-- more robust automatic build of identifiers
-- automatic extraction of year from date
-"""

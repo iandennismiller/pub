@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pub (c) Ian Dennis Miller
+# pub2 (c) Ian Dennis Miller
 
 import re
 import os
@@ -16,7 +16,7 @@ def read(fname):
     return open(fpath(fname)).read()
 
 
-file_text = read(fpath('pub/__meta__.py'))
+file_text = read(fpath('pub2/__meta__.py'))
 
 
 def grep(attrname):
@@ -27,13 +27,13 @@ def grep(attrname):
 
 setup(
     version=grep('__version__'),
-    name='pub',
+    name='pub2',
     description="Pub is a self-publishing framework.",
     packages=[
-        "pub",
+        "pub2",
     ],
     scripts=[
-        "bin/pub",
+        "bin/pub2",
     ],
     long_description=read('Readme.rst'),
     classifiers=[],  # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
