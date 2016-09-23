@@ -2,6 +2,7 @@
 
 ## Milestone 1
 
+- [ ] installs via pypi
 - [ ] install production environment
 - [ ] Read settings from _config.yml
 - [ ] support "layout" in preamble
