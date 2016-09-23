@@ -27,7 +27,7 @@ def read(fname):
     return open(fpath(fname)).read()
 
 
-file_text = read(fpath('../pub/__meta__.py'))
+file_text = read(fpath('../pub2/__meta__.py'))
 
 
 def grep(attrname):
