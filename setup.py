@@ -4,6 +4,7 @@
 import re
 import os
 from setuptools import setup
+from setuptools.command.install import install
 from distutils.dir_util import copy_tree
 
 
@@ -25,6 +26,18 @@ def grep(attrname):
     return strval
 
 
+class PostInstallCommand(install):
+    """Post-installation for installation mode."""
+    def run(self):
+        venv_path = os.environ.get("VIRTUAL_ENV")
+        if venv_path:
+            copy_tree("skel", os.path.join(venv_path, "share/skel"))
+        else:
+            print("This was not installed in a virtual environment.")
+            print("I won't install the skel files until later.")
+        install.do_egg_install(self)
+
+
 setup(
     version=grep('__version__'),
     name='pub2',
@@ -35,6 +48,9 @@ setup(
     scripts=[
         "bin/pub2",
     ],
+    cmdclass={
+        'install': PostInstallCommand,
+    },
     long_description=read('Readme.rst'),
     classifiers=[],  # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
     include_package_data=True,
@@ -46,10 +62,3 @@ setup(
     license='MIT',
     zip_safe=False,
 )
-
-venv_path = os.environ.get("VIRTUAL_ENV")
-if venv_path:
-    copy_tree("skel", os.path.join(venv_path, "share/skel"))
-else:
-    print("This was not installed in a virtual environment.")
-    print("I won't install the skel files until later.")
