@@ -9,7 +9,6 @@ import os
 import sys
 import re
 import shutil
-import click
 import codecs
 import pkg_resources
 from git import Repo
@@ -18,7 +17,7 @@ from distutils.dir_util import copy_tree
 
 
 class Pub2():
-    def __init__(self, directory_list=["_pubs"], json_destination="_data/pub.json"):
+    def __init__(self, directory_list=["_pubs"], json_destination="_data/pub2.json"):
         self.ensure_paths()
         self.directory_list = directory_list
         self.json_destination = json_destination
@@ -32,6 +31,8 @@ class Pub2():
         print(os.path.join(pathname, filename))
         os.system("mrbob -w {0} -O .".format(os.path.join(pathname, filename)))
         os.remove(".mrbob.ini")
+        os.remove("_pubs/_assets/.gitignore")
+        os.remove("_data/.gitignore")
 
     def find_files(self):
         """
@@ -46,7 +47,7 @@ class Pub2():
 
     def detect_changed_files(self):
         """
-        return a list of files in _pub that are newer than the corresponding versions in pub.
+        return a list of files in _pubs that are newer than the corresponding versions in pub.
         """
         changed_files = list()
 
@@ -61,7 +62,7 @@ class Pub2():
 
     def create_json_digest(self):
         """
-        summarize Pub contents into _data/pub.json
+        summarize Pub contents into _data/pub2.json
         """
         summary = list()
 
@@ -112,6 +113,17 @@ class Pub2():
 
         if not os.path.exists("_pubs"):
             os.makedirs("_pubs")
+
+    def create_from_template(self, title, author, year):
+        """
+        create a new pub from the blank template
+        """
+        filename = "-".join(title.split(" ")).lower() + ".tex"
+        with codecs.open("_pubs/_templates/blank.tex", "r", "utf-8") as f:
+            blank_template = f.read()
+        with codecs.open("_pubs/{0}".format(filename), "w", "utf-8") as f:
+            f.write(blank_template.format(title=title, author=author, year=year))
+        print("created file: _pubs/{0}".format(filename))
 
 
 class File():
@@ -228,7 +240,7 @@ class File():
         if not os.path.exists(".build"):
             os.makedirs(".build")
 
-        with codecs.open(".build/pub.tex", "w", "utf-8") as f:
+        with codecs.open(".build/pub2.tex", "w", "utf-8") as f:
             tmp_content = self.get_rendered_content()
             f.write(tmp_content)
 
@@ -241,9 +253,9 @@ class File():
         else:
             print("no assets for {0}".format(basename))
 
-        latex_cmd = 'cd .build && pdflatex pub.tex'
-        bibtex_cmd = 'cd .build && bibtex pub.aux'
-        biber_cmd = 'cd .build && biber pub'
+        latex_cmd = 'cd .build && pdflatex pub2.tex'
+        bibtex_cmd = 'cd .build && bibtex pub2.aux'
+        biber_cmd = 'cd .build && biber pub2'
 
         # run latex
         os.system(latex_cmd)
@@ -259,7 +271,7 @@ class File():
         os.system(latex_cmd)
 
         # copy result PDF
-        shutil.copy2(".build/pub.pdf", "pub/{0}.pdf".format(self.preamble["identifier"]))
+        shutil.copy2(".build/pub2.pdf", "pub/{0}.pdf".format(self.preamble["identifier"]))
         shutil.rmtree(".build")
 
     def is_stale(self):
@@ -269,7 +281,7 @@ class File():
         bib_filename = "pub/{0}.bib".format(self.identifier)
         pdf_filename = "pub/{0}.pdf".format(self.identifier)
 
-        if not os.path.isfile("_data/pub.json"):
+        if not os.path.isfile("_data/pub2.json"):
             return True
 
         # if the .bib or .pdf does not exist, return True
@@ -291,46 +303,3 @@ class File():
 
         if source_mtime > bib_mtime or source_mtime > pdf_mtime:
             return True
-
-
-@click.group()
-def cli():
-    pass
-
-
-@cli.command('init', short_help='create fresh Pub folders')
-def init():
-    pub = Pub2()
-    pub.init_folders()
-
-
-@cli.command('build', short_help='build files')
-def build():
-    pub = Pub2()
-    pub.build(rebuild=False)
-
-
-@cli.command('rebuild', short_help='force rebuild of all files')
-def rebuild():
-    pub = Pub2()
-    pub.build(rebuild=True)
-
-
-@cli.command('new', short_help='create an empty file')
-def new_from_template():
-    title = raw_input("Title: ")
-    author = raw_input("Author(s): ")
-    year = raw_input("Year: ")
-    filename = "-".join(title.split(" ")).lower() + ".tex"
-    with codecs.open("_pubs/_templates/blank.tex", "r", "utf-8") as f:
-        blank_template = f.read()
-    with codecs.open("_pubs/{0}".format(filename), "w", "utf-8") as f:
-        f.write(blank_template.format(title=title, author=author, year=year))
-    print("created file: _pubs/{0}".format(filename))
-
-
-cli.add_command(build)
-cli.add_command(rebuild)
-
-if __name__ == '__main__':
-    cli()
