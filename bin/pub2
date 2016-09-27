@@ -3,7 +3,7 @@
 # Pub2 (cc) 2016 Ian Dennis Miller
 
 import click
-from pub2 import Pub2
+from pub2.pub2 import Pub2
 
 
 @click.group()

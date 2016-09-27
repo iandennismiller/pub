@@ -1,36 +1,31 @@
 # pub2 (c) Ian Dennis Miller
 
 SHELL=/bin/bash
-PROJECT_NAME=pub
-MOD_NAME=pub
-TEST_CMD=SETTINGS=$$PWD/etc/conf/testing.conf nosetests -w $(MOD_NAME)
+MOD_NAME=pub2
 
 install:
 	python setup.py install
-
-requirements:
-	pip install -r requirements.txt
-
-requirements-dev:
-	pip install -r requirements-dev.txt
 
 clean:
 	rm -rf build dist *.egg-info
 	find . -name '*.pyc' -delete
 	find . -name __pycache__ -delete
 
-watch:
-	watchmedo shell-command -R -p "*.py" -c 'echo \\n\\n\\n\\nSTART; date; $(TEST_CMD) -c etc/nose/test-single.cfg; date' .
-
-test:
-	$(TEST_CMD) -c etc/nose/test.cfg
-
 docs:
 	rm -rf build/sphinx
-	SETTINGS=$$PWD/etc/conf/testing.conf sphinx-build -b html docs build/sphinx
+	sphinx-build -b html docs build/sphinx
+
+watch:
+	watchmedo shell-command -R -p "*.py" -c 'date; nosetests -w $(MOD_NAME) -c etc/tests.cfg; date' .
+
+test:
+	nosetests -w $(MOD_NAME) -c etc/tests.cfg
+
+tox:
+	tox
 
 release:
 	# first: python setup.py register -r https://pypi.python.org/pypi
 	python setup.py sdist upload -r https://pypi.python.org/pypi
 
-.PHONY: clean install test watch docs release requirements requirements-dev
+.PHONY: clean install test watch docs release tox
