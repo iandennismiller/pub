@@ -2,6 +2,7 @@
 
 SHELL=/bin/bash
 MOD_NAME=pub2
+TEST_CMD=nosetests -w $(MOD_NAME) -c etc/tests.cfg --with-coverage --cover-package=$(MOD_NAME)
 
 install:
 	python setup.py install
@@ -16,10 +17,10 @@ docs:
 	sphinx-build -b html docs build/sphinx
 
 watch:
-	watchmedo shell-command -R -p "*.py" -c 'date; nosetests -w $(MOD_NAME) -c etc/tests.cfg; date' .
+	watchmedo shell-command -R -p "*.py" -c 'date; $(TEST_CMD); date' .
 
 test:
-	nosetests -w $(MOD_NAME) -c etc/tests.cfg
+	$(TEST_CMD)
 
 tox:
 	tox

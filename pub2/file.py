@@ -7,6 +7,7 @@ import os
 import re
 import shutil
 import codecs
+from os.path import join as opj
 from jinja2 import Template
 from distutils.dir_util import copy_tree
 
@@ -70,7 +71,7 @@ class File():
 
         if 'layout' in self.preamble and self.preamble['layout'] != None:
             layout_filename = "_pubs/_layouts/{0}.tex".format(self.preamble['layout'])
-            with codecs.open(layout_filename, "r", "utf-8") as f:
+            with codecs.open(opj(self.working_dir, layout_filename), "r", "utf-8") as f:
                 re_content = r"^---$.*?^---$(.*)"
                 m = re.search(re_content, f.read(), re.MULTILINE | re.DOTALL)
                 if m:
@@ -99,11 +100,11 @@ class File():
         # determine filename
         filename = "./pub/{0}.bib".format(self.identifier)
 
-        with codecs.open("_pubs/_templates/citation.bib", "r", "utf-8") as f:
+        with codecs.open(opj(self.working_dir, "_pubs/_templates/citation.bib"), "r", "utf-8") as f:
             bibtex_template = f.read()
 
         bibtex_str = bibtex_template.format(**self.preamble)
-        with codecs.open(filename, "w", "utf-8") as f:
+        with codecs.open(opj(self.working_dir, filename), "w", "utf-8") as f:
             f.write(bibtex_str)
 
     def create_html(self):
@@ -113,11 +114,11 @@ class File():
         # determine filename
         filename = "./pub/{0}.html".format(self.identifier)
 
-        with codecs.open("_pubs/_templates/view.html", "r", "utf-8") as f:
+        with codecs.open(opj(self.working_dir, "_pubs/_templates/view.html"), "r", "utf-8") as f:
             html_template = f.read()
 
         html_str = html_template.format(**self.preamble)
-        with codecs.open(filename, "w", "utf-8") as f:
+        with codecs.open(opj(self.working_dir, filename), "w", "utf-8") as f:
             f.write(html_str)
 
     def create_pdf(self):
@@ -125,25 +126,25 @@ class File():
         create the PDF file for this pub
         """
         # ensure .build directory exists
-        if not os.path.exists(".build"):
-            os.makedirs(".build")
+        if not os.path.exists(opj(self.working_dir, ".build")):
+            os.makedirs(opj(self.working_dir, ".build"))
 
-        with codecs.open(".build/pub2.tex", "w", "utf-8") as f:
+        with codecs.open(opj(self.working_dir, ".build/pub2.tex"), "w", "utf-8") as f:
             tmp_content = self.get_rendered_content()
             f.write(tmp_content)
 
         basename = os.path.basename(self.filename)[:-4]
 
         # copy assets
-        assets_path = "_pubs/_assets/{0}/".format(basename)
+        assets_path = opj(self.working_dir, "_pubs/_assets/{0}/".format(basename))
         if os.path.exists(assets_path):
-            copy_tree(assets_path, ".build/")
+            copy_tree(assets_path, opj(self.working_dir, ".build/"))
         else:
             print("no assets for {0}".format(basename))
 
-        latex_cmd = 'cd .build && pdflatex pub2.tex'
-        bibtex_cmd = 'cd .build && bibtex pub2.aux'
-        biber_cmd = 'cd .build && biber pub2'
+        latex_cmd = 'cd {0} && pdflatex pub2.tex'.format(opj(self.working_dir, ".build"))
+        bibtex_cmd = 'cd {0} && bibtex pub2.aux'.format(opj(self.working_dir, ".build"))
+        biber_cmd = 'cd {0} && biber pub2'.format(opj(self.working_dir, ".build"))
 
         # run latex
         os.system(latex_cmd)
@@ -159,35 +160,40 @@ class File():
         os.system(latex_cmd)
 
         # copy result PDF
-        shutil.copy2(".build/pub2.pdf", "pub/{0}.pdf".format(self.preamble["identifier"]))
-        shutil.rmtree(".build")
+        shutil.copy2(
+            opj(self.working_dir, ".build/pub2.pdf"),
+            opj(self.working_dir, "pub/{0}.pdf".format(self.preamble["identifier"]))
+        )
+        shutil.rmtree(opj(self.working_dir, ".build"))
 
     def is_stale(self):
         """
         return True if the files in pub are older than the one in _pubs.
         """
-        bib_filename = "pub/{0}.bib".format(self.identifier)
-        pdf_filename = "pub/{0}.pdf".format(self.identifier)
-        html_filename = "pub/{0}.html".format(self.identifier)
+        bib_filename = opj(self.working_dir, "pub/{0}.bib".format(self.identifier))
+        pdf_filename = opj(self.working_dir, "pub/{0}.pdf".format(self.identifier))
+        html_filename = opj(self.working_dir, "pub/{0}.html".format(self.identifier))
 
-        if not os.path.isfile("_data/pub2.json"):
+        if not os.path.isfile(opj(self.working_dir, "_data/pub2.json")):
             return True
 
         # if a file does not exist, return True
-        if not os.path.isfile(html_filename):
+        if not os.path.isfile(opj(self.working_dir, html_filename)):
             return True
 
-        if not os.path.isfile(bib_filename):
+        if not os.path.isfile(opj(self.working_dir, bib_filename)):
             return True
 
-        if not os.path.isfile(pdf_filename):
+        if not os.path.isfile(opj(self.working_dir, pdf_filename)):
             return True
 
         # if the modification time of the .bib or .pdf is older, return True
-        (mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime) = os.stat(self.filename)
+        (mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime) = \
+            os.stat(opj(self.working_dir, self.filename))
         source_mtime = mtime
 
-        (mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime) = os.stat(bib_filename)
+        (mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime) = \
+            os.stat(opj(self.working_dir, bib_filename))
         bib_mtime = mtime
 
         (mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime) = os.stat(pdf_filename)
