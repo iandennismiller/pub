@@ -8,6 +8,9 @@ Overview
 
 Pub2 is a self-publishing framework.  It integrates with Jekyll to provide LaTeX publishing.
 
+.. image:: https://travis-ci.org/iandennismiller/pub2.svg?branch=master
+    :target: https://travis-ci.org/iandennismiller/pub2
+
 Installation
 ^^^^^^^^^^^^
 

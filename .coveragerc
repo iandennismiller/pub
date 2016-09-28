@@ -1,0 +1,6 @@
+[run]
+source = pub2
+[report]
+omit =
+    */python?.?/*
+    */site-packages/nose/*
