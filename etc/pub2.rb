@@ -7,6 +7,7 @@ class Pub2 < Formula
   homepage "https://github.com/iandennismiller/pub2"
   url "https://files.pythonhosted.org/packages/a1/cc/cbe1f520a3ac1015bdc51cb5c24750dd64fb740eaa6e38165984fbf20489/pub2-0.1.5.tar.gz"
   sha256 "f51e3db24c9e5693ef06993e9ff0b1375a67ec08bec256d6cf6ac1bb7a789bf3"
+  depends_on "imagemagick"
 
   resource "click" do
     url "https://files.pythonhosted.org/packages/7a/00/c14926d8232b36b08218067bcd5853caefb4737cda3f0a47437151344792/click-6.6.tar.gz"

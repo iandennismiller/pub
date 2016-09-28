@@ -37,6 +37,7 @@ class Pub2 < Formula
   homepage "https://github.com/iandennismiller/pub2"
   url "${URL}"
   sha256 "${SHA}"
+  depends_on "imagemagick"
 
 EOF
 
