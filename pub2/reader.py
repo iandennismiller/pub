@@ -55,7 +55,7 @@ class Reader():
         m = re.search(re_content, self.raw, re.MULTILINE | re.DOTALL)
         if m:
             content = m.group(1)
-            return(unicode(content))
+            return(content)
 
     def _identifier(self):
         """

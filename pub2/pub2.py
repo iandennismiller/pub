@@ -9,8 +9,8 @@ import sys
 import codecs
 import pkg_resources
 from git import Repo
-from file import File
 from os.path import join as opj
+from .file import File
 
 
 class Pub2():

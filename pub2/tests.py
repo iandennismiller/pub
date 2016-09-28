@@ -6,7 +6,7 @@ import os
 from shutil import rmtree
 from nose.plugins.attrib import attr
 from unittest import TestCase
-from pub2 import Pub2
+from .pub2 import Pub2
 from .file import File
 from .reader import Reader
 from .writer import Writer
