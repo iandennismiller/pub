@@ -3,11 +3,6 @@ pub2
 
 Pub2 is a self-publishing framework.
 
-Overview
---------
-
-Pub2 is a self-publishing framework.  It integrates with Jekyll to provide LaTeX publishing.
-
 .. image:: https://img.shields.io/github/stars/iandennismiller/pub2.svg?style=social&label=GitHub
     :target: https://github.com/iandennismiller/pub2
 
@@ -23,6 +18,11 @@ Pub2 is a self-publishing framework.  It integrates with Jekyll to provide LaTeX
 
 .. image:: https://coveralls.io/repos/github/iandennismiller/pub2/badge.svg?branch=master
     :target: https://coveralls.io/github/iandennismiller/pub2?branch=master
+
+Overview
+--------
+
+Pub2 is a self-publishing framework.  It integrates with Jekyll to provide LaTeX publishing.
 
 Installation
 ^^^^^^^^^^^^
