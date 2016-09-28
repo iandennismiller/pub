@@ -77,7 +77,6 @@ class File():
                 if m:
                     layout_template = Template(m.group(1))
             result = layout_template.render(pub=self.preamble, content=self.content)
-            # result = layout_template.render(pub=self.preamble, content="")
             return(result)
         else:
             return(self.content)
@@ -98,28 +97,30 @@ class File():
         create the bibtex file for this pub
         """
         # determine filename
-        filename = "./pub/{0}.bib".format(self.identifier)
+        filename = "./pub2/{0}.bib".format(self.identifier)
 
         with codecs.open(opj(self.working_dir, "_pubs/_templates/citation.bib"), "r", "utf-8") as f:
             bibtex_template = f.read()
+        # bibtex_str = bibtex_template.format(**self.preamble)
+        result = Template(bibtex_template).render(pub=self.preamble)
 
-        bibtex_str = bibtex_template.format(**self.preamble)
         with codecs.open(opj(self.working_dir, filename), "w", "utf-8") as f:
-            f.write(bibtex_str)
+            f.write(result)
 
     def create_html(self):
         """
         create the bibtex file for this pub
         """
         # determine filename
-        filename = "./pub/{0}.html".format(self.identifier)
+        filename = "./pub2/{0}.html".format(self.identifier)
 
         with codecs.open(opj(self.working_dir, "_pubs/_templates/view.html"), "r", "utf-8") as f:
             html_template = f.read()
+        # html_str = html_template.format(**self.preamble)
+        result = Template(html_template).render(pub=self.preamble)
 
-        html_str = html_template.format(**self.preamble)
         with codecs.open(opj(self.working_dir, filename), "w", "utf-8") as f:
-            f.write(html_str)
+            f.write(result)
 
     def create_pdf(self):
         """
@@ -162,7 +163,7 @@ class File():
         # copy result PDF
         shutil.copy2(
             opj(self.working_dir, ".build/pub2.pdf"),
-            opj(self.working_dir, "pub/{0}.pdf".format(self.preamble["identifier"]))
+            opj(self.working_dir, "pub2/{0}.pdf".format(self.preamble["identifier"]))
         )
         shutil.rmtree(opj(self.working_dir, ".build"))
 
@@ -170,9 +171,9 @@ class File():
         """
         return True if the files in pub are older than the one in _pubs.
         """
-        bib_filename = opj(self.working_dir, "pub/{0}.bib".format(self.identifier))
-        pdf_filename = opj(self.working_dir, "pub/{0}.pdf".format(self.identifier))
-        html_filename = opj(self.working_dir, "pub/{0}.html".format(self.identifier))
+        bib_filename = opj(self.working_dir, "pub2/{0}.bib".format(self.identifier))
+        pdf_filename = opj(self.working_dir, "pub2/{0}.pdf".format(self.identifier))
+        html_filename = opj(self.working_dir, "pub2/{0}.html".format(self.identifier))
 
         if not os.path.isfile(opj(self.working_dir, "_data/pub2.json")):
             return True

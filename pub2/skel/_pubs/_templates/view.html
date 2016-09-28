@@ -1,13 +1,8 @@
 ---
 layout: page
-title: {title}
-permalink: /pub/{identifier}
+title: {{ pub.title }}
+permalink: /pub/{{ pub.identifier }}.html
+{% if pub.excerpt %}excerpt: "{{ pub.excerpt }}"{% endif %}
 ---
 
-<div>Author: {author}</div>
-<div>Year: {year}</div>
-<div>
-    <a href="/pub/{identifier}.html">[View]</a>
-    <a href="/pub/{identifier}.pdf">[PDF]</a>
-    <a href="/pub/{identifier}.bib">[Bib]</a>
-</div>
+{{ '{' }}% include pub2-view.html identifier='{{ pub.identifier }}' %{{ '}' }}

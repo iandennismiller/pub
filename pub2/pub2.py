@@ -103,14 +103,14 @@ class Pub2():
 
     def ensure_paths(self, working_dir):
         """
-        mkdir pub
+        mkdir pub2
         """
         def check_make(path):
             if not os.path.exists(path):
                 os.makedirs(path)
 
         check_make(working_dir)
-        check_make(opj(working_dir, "pub"))
+        check_make(opj(working_dir, "pub2"))
         check_make(opj(working_dir, "_pubs"))
 
     def create_from_template(self, title, author, year):
