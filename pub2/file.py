@@ -30,12 +30,20 @@ class File():
         bib_filename = opj(self.working_dir, "pub2/{0}.bib".format(self.identifier))
         pdf_filename = opj(self.working_dir, "pub2/{0}.pdf".format(self.identifier))
         html_filename = opj(self.working_dir, "pub2/{0}.html".format(self.identifier))
-        png_filename = opj(self.working_dir, "pub2/{0}.png".format(self.identifier))
+        preview_filename = opj(self.working_dir, "pub2/{0}.png".format(self.identifier))
         data_filename = opj(self.working_dir, "_data/pub2.json")
+
+        filenames = [
+            html_filename,
+            bib_filename,
+            pdf_filename,
+            data_filename,
+            preview_filename
+        ]
 
         source_mtime = os.stat(opj(self.working_dir, self.filename))[8]
 
-        for filename in [html_filename, bib_filename, pdf_filename, data_filename, png_filename]:
+        for filename in filenames:
             # if a file does not exist, return True
             if not os.path.isfile(opj(self.working_dir, filename)):
                 return True

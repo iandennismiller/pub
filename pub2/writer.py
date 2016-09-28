@@ -63,7 +63,7 @@ class Writer():
             result = layout_template.render(pub=self.file.preamble, content=self.file.content)
             return(result)
         else:
-            return(self.content)
+            return(self.file.content)
 
     def create_pdf(self):
         """

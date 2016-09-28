@@ -14,13 +14,13 @@ from os.path import join as opj
 
 
 CLEANUP = False
+# WORKING_DIR = opj("/tmp", "pub2")
+WORKING_DIR = opj(tempfile.gettempdir(), "pub2")
 
 
 class Pub2TestSuite(TestCase):
     def setUp(self):
-        # self.working_dir = opj(tempfile.gettempdir(), "pub2")
-        self.working_dir = opj("/tmp", "pub2")
-        print("testing in {0}".format(self.working_dir))
+        self.working_dir = WORKING_DIR
         self.p = Pub2(self.working_dir)
 
     def tearDown(self):
@@ -73,9 +73,7 @@ class Pub2TestSuite(TestCase):
 
 class FileTestSuite(TestCase):
     def setUp(self):
-        # self.working_dir = opj(tempfile.gettempdir(), "pub2")
-        self.working_dir = opj("/tmp", "pub2")
-        print("testing in {0}".format(self.working_dir))
+        self.working_dir = WORKING_DIR
 
         p = Pub2(self.working_dir)
         p.init_folders()
@@ -111,7 +109,7 @@ class FileTestSuite(TestCase):
         self.f.writer.create_bibtex()
         self.assertTrue(os.path.isfile(opj(self.working_dir, "pub2", "miller_first_2016.bib")))
 
-    # @attr("slow")
+    @attr("slow")
     def testCreatePdf(self):
         self.f.writer.create_pdf()
         self.assertTrue(os.path.isfile(opj(self.working_dir, "pub2", "miller_first_2016.pdf")))
