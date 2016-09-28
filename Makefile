@@ -25,9 +25,6 @@ watch:
 test:
 	$(TEST_CMD)
 
-travis:
-	nosetests -w $(MOD_NAME) -c etc/tests-travis.cfg --with-coverage --cover-package=$(MOD_NAME)
-
 tox:
 	tox
 
@@ -35,4 +32,9 @@ release:
 	# first: python setup.py register -r https://pypi.python.org/pypi
 	python setup.py sdist upload -r https://pypi.python.org/pypi
 
-.PHONY: clean install test watch docs release tox dev travis
+# create a homebrew install script
+homebrew:
+	etc/poet-homebrew.sh
+	cp /tmp/pub2.rb etc/pub2.rb
+
+.PHONY: clean install test watch docs release tox dev homebrew

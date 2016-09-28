@@ -3,11 +3,9 @@ cache: pip
 python:
   - 2.7
   - 3.5
-# command to install dependencies
 install:
   - make dev install
-# command to run tests
 script:
-  - make travis
+  - nosetests -w pub2 -c etc/tests-travis.cfg --with-coverage --cover-package=pub2
 after_success:
-  coveralls --rcfile=.coveragerc
+  - coveralls --rcfile=.coveragerc

@@ -1,12 +1,12 @@
-# Homebrew Formula for Pub2
+# Homebrew Formula
 # pub2 (c) Ian Dennis Miller
-# based on https://github.com/Homebrew/brew/blob/master/docs/Python-for-Formula-Authors.md
+# rebuild with 'make homebrew'
 
 class Pub2 < Formula
   desc "Pub2 is a self-publishing framework"
   homepage "https://github.com/iandennismiller/pub2"
-  url "https://files.pythonhosted.org/packages/b7/d3/2e9657021c1fb0a9379a5105e83507b3460dec7d53ef9ed4a9734e467eec/pub2-0.1.2.tar.gz"
-  sha256 "601f96ae47716f2d23fdbc9455187b59bec70c9a26a2b13f830692624ac3b5d8"
+  url "https://files.pythonhosted.org/packages/a1/cc/cbe1f520a3ac1015bdc51cb5c24750dd64fb740eaa6e38165984fbf20489/pub2-0.1.5.tar.gz"
+  sha256 "f51e3db24c9e5693ef06993e9ff0b1375a67ec08bec256d6cf6ac1bb7a789bf3"
 
   resource "click" do
     url "https://files.pythonhosted.org/packages/7a/00/c14926d8232b36b08218067bcd5853caefb4737cda3f0a47437151344792/click-6.6.tar.gz"
@@ -51,6 +51,11 @@ class Pub2 < Formula
   resource "smmap" do
     url "https://files.pythonhosted.org/packages/bc/aa/b744b3761fff1b10579df996a2d2e87f124ae07b8336e37edc89cc502f86/smmap-0.9.0.tar.gz"
     sha256 "0e2b62b497bd5f0afebc002eda4d90df9d209c30ef257e8673c90a6b5c119d62"
+  end
+
+  resource "Wand" do
+    url "https://files.pythonhosted.org/packages/bd/b2/a2276b912d641a196af3713772899b4a7af5114295ad0ebc44039014b2cc/Wand-0.4.3.tar.gz"
+    sha256 "576133476b1970313b4ab69460051dba2563ac125143bc109d6c796f77d9bd57"
   end
 
   include Language::Python::Virtualenv
