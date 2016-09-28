@@ -27,18 +27,19 @@ Pub2 is a self-publishing framework.  It integrates with Jekyll to provide LaTeX
 Installation
 ^^^^^^^^^^^^
 
-The following will install pub2.
-
-::
-
-    mkvirtualenv -a . my-website
-    pip install pub2
-
-Pub2 can be installed system-wide with Homebrew.
+Homebrew
+~~~~~~~~
 
 ::
 
     brew install https://raw.githubusercontent.com/iandennismiller/pub2/master/etc/pub2.rb
+
+Python pip
+~~~~~~~~~~
+
+::
+
+    pip install pub2
 
 Usage
 ^^^^^
