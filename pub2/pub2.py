@@ -70,10 +70,10 @@ class Pub2():
 
         for filename in self.find_files():
             pub_file = self.load_file(filename)
-            preamble = pub_file.get_preamble()
 
-            if all(k in preamble for k in ("title", "author", "identifier", "year", "category")):
-                summary[preamble['identifier']] = preamble
+            required_keys = ("title", "author", "identifier", "year", "category")
+            if all(k in pub_file.preamble for k in required_keys):
+                summary[pub_file.preamble['identifier']] = pub_file.preamble
             else:
                 print("ERROR: Missing required fields from preamble: {0}".format(filename))
                 sys.exit(1)
@@ -96,9 +96,9 @@ class Pub2():
             for filename in changed_files:
                 print("process: {0}".format(filename))
                 pub_file = self.load_file(filename)
-                pub_file.create_bibtex()
-                pub_file.create_html()
-                pub_file.create_pdf()
+                pub_file.writer.create_bibtex()
+                pub_file.writer.create_html()
+                pub_file.writer.create_pdf()
         print("Done")
 
     def ensure_paths(self, working_dir):

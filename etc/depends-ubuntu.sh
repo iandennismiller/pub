@@ -12,5 +12,5 @@ bundle install --path vendor/bundle
 
 # for Pub2
 source /usr/local/bin/virtualenvwrapper.sh
-mkvirtualenv -a . -r requirements.txt pub2
+mkvirtualenv -a . -r requirements-dev.txt pub2
 source ~/.virtualenvs/pub2/bin/activate

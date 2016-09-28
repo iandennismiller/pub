@@ -4,18 +4,20 @@
 </p>
 
 <p>
-    <a href="/pub/{{ include.identifier }}.html">[View]</a>
-    <a href="/pub/{{ include.identifier }}.pdf">[PDF]</a>
-    <a href="/pub/{{ include.identifier }}.bib">[Bib]</a>
+    <a href="/pub2/{{ include.identifier }}.html">[View]</a>
+    <a href="/pub2/{{ include.identifier }}.pdf">[PDF]</a>
+    <a href="/pub2/{{ include.identifier }}.bib">[Bib]</a>
 </p>
 
-{% if site.data.pub2[include.identifier].excerpt %}
+<div id="document_preview">
+    <img src="/pub2/{{ include.identifier }}.png">
+</div>
 
+{% if site.data.pub2[include.identifier].excerpt %}
 <h2>excerpt</h2>
 <div>
     <p>
         {{ site.data.pub2[include.identifier].excerpt }}
     </p>
 </div>
-
 {% endif %}

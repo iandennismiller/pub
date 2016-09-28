@@ -24,6 +24,9 @@ pip install -U pip
 # ensure virtualenvwrapper is installed
 pip install -U virtualenv virtualenvwrapper
 
+# install imagemagick / magickwand
+apt-get -y install libmagickwand-dev
+
 # install TeX Live (currently 2016)
 wget https://github.com/scottkosty/install-tl-ubuntu/raw/master/install-tl-ubuntu
 chmod +x ./install-tl-ubuntu

@@ -10,11 +10,10 @@ permalink:  /pub2/
 
 <ul>
   {% for pub in site.data.pub2 %}
-  <li>
-    <a href="/pub/{{ pub.identifier }}.html">[View]</a>
-    <a href="/pub/{{ pub.identifier }}.pdf">[PDF]</a>
-    <a href="/pub/{{ pub.identifier }}.bib">[Bib]</a>
-    {{ pub.author }} ({{ pub.year }}). {{ pub.title }}
-  </li>
+    <li>
+      <a class="cite" href="/pub2/{{ pub[1].identifier }}.html">
+        {{ pub[1].author }} ({{ pub[1].year }}). {{ pub[1].title }}
+      </a>
+    </li>
   {% endfor %}
 </ul>

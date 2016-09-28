@@ -7,7 +7,9 @@ from shutil import rmtree
 from nose.plugins.attrib import attr
 from unittest import TestCase
 from pub2 import Pub2
-from file import File
+from .file import File
+from .reader import Reader
+from .writer import Writer
 from os.path import join as opj
 
 
@@ -66,7 +68,7 @@ class Pub2TestSuite(TestCase):
         self.assertIsNotNone(f)
 
     def test_ensure_paths(self):
-        self.assertTrue(os.path.isdir(opj(self.working_dir, "pub")))
+        self.assertTrue(os.path.isdir(opj(self.working_dir, "pub2")))
 
 
 class FileTestSuite(TestCase):
@@ -97,23 +99,24 @@ class FileTestSuite(TestCase):
         f = File(self.p, first_file)
         self.assertIsNotNone(f)
 
-    def testPreamble(self):
-        self.assertIsNotNone(self.f.get_preamble())
-        self.assertIsNotNone(self.f.get_content())
-        self.assertIsNotNone(self.f.get_identifier())
+    def testReader(self):
+        self.assertIsNotNone(self.f.preamble)
+        self.assertIsNotNone(self.f.content)
+        self.assertIsNotNone(self.f.identifier)
 
     def testRender(self):
-        self.assertIsNotNone(self.f.get_rendered_content())
+        self.assertIsNotNone(self.f.writer._render_content())
 
     def testCreateBibtex(self):
-        self.f.create_bibtex()
-        self.assertTrue(os.path.isfile(opj(self.working_dir, "pub", "miller_first_2016.bib")))
+        self.f.writer.create_bibtex()
+        self.assertTrue(os.path.isfile(opj(self.working_dir, "pub2", "miller_first_2016.bib")))
 
-    @attr("slow")
+    # @attr("slow")
     def testCreatePdf(self):
-        self.f.create_pdf()
-        self.assertTrue(os.path.isfile(opj(self.working_dir, "pub", "miller_first_2016.pdf")))
+        self.f.writer.create_pdf()
+        self.assertTrue(os.path.isfile(opj(self.working_dir, "pub2", "miller_first_2016.pdf")))
+        self.assertTrue(os.path.isfile(opj(self.working_dir, "pub2", "miller_first_2016.png")))
 
     def testCreateHtml(self):
-        self.f.create_html()
-        self.assertTrue(os.path.isfile(opj(self.working_dir, "pub", "miller_first_2016.html")))
+        self.f.writer.create_html()
+        self.assertTrue(os.path.isfile(opj(self.working_dir, "pub2", "miller_first_2016.html")))
