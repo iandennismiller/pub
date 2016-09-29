@@ -1,9 +1,11 @@
 .. include:: ../Readme.rst
 
-Introduction
-------------
+About
+-----
 
 .. toctree::
     :maxdepth: 1
 
+    installation
     license
+    changelog

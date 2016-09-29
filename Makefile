@@ -16,7 +16,7 @@ clean:
 	find . -name __pycache__ -delete
 
 docs:
-	rm -rf build/sphinx
+	# rm -rf build/sphinx
 	sphinx-build -b html docs build/sphinx
 
 watch:
