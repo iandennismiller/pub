@@ -33,6 +33,7 @@ Homebrew
 ::
 
     brew install https://raw.githubusercontent.com/iandennismiller/pub2/master/etc/pub2.rb
+    brew cask install mactex
 
 Python pip
 ~~~~~~~~~~
