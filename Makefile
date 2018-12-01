@@ -30,7 +30,7 @@ tox:
 
 release:
 	# first: python setup.py register -r https://pypi.python.org/pypi
-	python setup.py sdist upload -r https://pypi.python.org/pypi
+	python setup.py sdist upload
 
 # create a homebrew install script
 homebrew:
